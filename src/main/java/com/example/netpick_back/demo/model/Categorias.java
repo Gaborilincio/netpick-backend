@@ -18,5 +18,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 public class Categorias {
+    @Id
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    private Integer idCategorias;
+
+    @ManyToOne
+    @JoinColumn(name = "idCategoria", nullable = false)
+    private Categoria categoria;
+
+    @ManyToOne
+    @JoinColumn(name = "idProducto", nullable = false)
+    private Producto producto;
 
 }

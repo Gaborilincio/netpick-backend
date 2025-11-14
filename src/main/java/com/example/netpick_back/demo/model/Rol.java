@@ -18,5 +18,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 public class Rol {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idRol;
 
+    @Column(name = "nombreRol", length = 50, nullable = false)
+    private String nombre;
 }

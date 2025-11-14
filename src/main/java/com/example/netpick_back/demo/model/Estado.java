@@ -18,5 +18,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 public class Estado {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idEstado;
 
+    @Column(name = "nombreEstado", length = 50, nullable = false)
+    private String nombre;
 }

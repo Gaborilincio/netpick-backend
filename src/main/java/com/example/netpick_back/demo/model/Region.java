@@ -22,7 +22,11 @@ public class Region {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idRegion;
 
-    @Column(name = "nombre", length = 50, nullable = false)
-    private String nombreRegion;
+    @Column(name = "nombreRegion", length = 50, nullable = false)
+    private String nombre;
+
+    @ManyToOne
+    @JoinColumn(name = "idComuna", nullable = false)
+    private Comuna comuna;
 
 }

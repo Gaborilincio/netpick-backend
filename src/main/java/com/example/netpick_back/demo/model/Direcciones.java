@@ -1,7 +1,5 @@
 package com.example.netpick_back.demo.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,5 +28,12 @@ public class Direcciones {
     
     @Column(name = "pais", length = 50, nullable = false)
     private String pais;
+
+    @ManyToOne
+    @JoinColumn(name = "idUsuario", nullable = false)
+    private Usuario usuario;
     
+    @ManyToOne
+    @JoinColumn(name = "idComuna", nullable = false)
+    private Comuna comuna;
 }

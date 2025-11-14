@@ -18,5 +18,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 public class MetodoPago {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idMetodoPago;
 
+    @Column(name = "nombreMetodoPago", length = 50, nullable = false)
+    private String nombre;
 }

@@ -18,5 +18,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 public class MetodoEnvio {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idMetodoEnvio;
+
+    @Column(name = "nombreMetodoEnvio", length = 50, nullable = false)
+    private String nombre;
 
 }

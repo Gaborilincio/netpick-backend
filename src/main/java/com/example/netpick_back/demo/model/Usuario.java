@@ -17,7 +17,24 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-
 public class Usuario {
-    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idUsuario;
+
+    @Column(name = "nombreUsuario", length = 50, nullable = false)
+    private String nombre;
+
+    @Column(name = "correoUsuario", length = 50, nullable = false)
+    private String correo;
+
+    @Column(name = "claveUsuario", length = 50, nullable = false)
+    private String clave;
+
+    @Column(name = "telefonoUsuario", length = 50, nullable = false)
+    private String telefono;
+
+    @ManyToOne
+    @JoinColumn(name = "idRol", nullable = false)
+    private Rol rol;
 }

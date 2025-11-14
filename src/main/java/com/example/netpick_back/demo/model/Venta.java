@@ -18,5 +18,25 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 public class Venta {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idVenta;
+
+    @ManyToOne
+    @JoinColumn(name = "idMetodoPago", nullable = false)
+    private MetodoPago metodoPago;
+
+    @ManyToOne
+    @JoinColumn(name = "idMetodoEnvio", nullable = false)
+    private MetodoEnvio metodoEnvio;
+
+    @ManyToOne
+    @JoinColumn(name = "idEstado", nullable = false)
+    private Estado estado;
+
+    @ManyToOne
+    @JoinColumn(name = "idUsuario", nullable = false)
+    private Usuario usuario;
+
 
 }
