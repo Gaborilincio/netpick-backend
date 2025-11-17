@@ -1,5 +1,5 @@
 package com.example.netpick_back.demo.service;
 
-public class VentaService1 {
+public class VentaProductoService {
 
 }

@@ -1,5 +1,5 @@
 package com.example.netpick_back.demo.repository;
 
-public class CategoriasRepository {
+public class ComunasRepository {
 
 }

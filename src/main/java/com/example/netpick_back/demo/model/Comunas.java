@@ -19,14 +19,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table (name = "categorias")
-public class Categorias {
+public class Comunas {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
-    private Integer idCategorias;
+    private Integer idComunas;
 
     @ManyToOne
-    @JoinColumn(name = "idCategoria", nullable = false)
-    private Categoria categoria;
+    @JoinColumn(name = "idComuna", nullable = false)
+    private Comuna categoria;
 
     @ManyToOne
     @JoinColumn(name = "idProducto", nullable = false)

@@ -1,5 +1,5 @@
 package com.example.netpick_back.demo.controller;
 
-public class MetodoController {
+public class MetodoEnvioController {
 
 }
