@@ -1,5 +1,14 @@
 package com.example.netpick_back.demo.repository;
 
-public class UsuarioRepository {
+import java.util.List;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.example.netpick_back.demo.model.Usuario;
+
+@Repository
+public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
+    List<Usuario> findByIdUsuario (Integer idUsuario);
+    List<Usuario> findByNombre (String nombre);
 }
