@@ -15,19 +15,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
-import com.example.netpick_back.demo.model.Venta;
-import com.example.netpick_back.demo.service.VentaService;
+import com.example.netpick_back.demo.model.Rol;
+import com.example.netpick_back.demo.service.RolService;
 
 @RestController
-@RequestMapping("/api/venta")
-public class VentaController {
+
+public class RolController {
 
     @Autowired
-    private VentaService regionService;
+    private RolService regionService;
 
     @GetMapping
-    public ResponseEntity<List<Venta>> getAllVentas() {
-        List<Venta> carreras = regionService.findAll();
+    public ResponseEntity<List<Rol>> getAllRols() {
+        List<Rol> carreras = regionService.findAll();
         if (carreras.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
@@ -35,8 +35,8 @@ public class VentaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Venta> getVentaById(@PathVariable Integer id) {
-        Venta region = regionService.findById(id);
+    public ResponseEntity<Rol> getRolById(@PathVariable Integer id) {
+        Rol region = regionService.findById(id);
         if (region == null) {
             return ResponseEntity.notFound().build();
         }
@@ -44,32 +44,32 @@ public class VentaController {
     }
 
     @PostMapping
-    public ResponseEntity<Venta> createVenta(@RequestBody Venta region) {
-        Venta createdVenta = regionService.save(region);
-        return ResponseEntity.status(201).body(createdVenta);
+    public ResponseEntity<Rol> createRol(@RequestBody Rol region) {
+        Rol createdRol = regionService.save(region);
+        return ResponseEntity.status(201).body(createdRol);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Venta> updateVenta(@PathVariable Integer id, @RequestBody Venta region) {
-        region.setIdVenta(id);
-        Venta updatedVenta = regionService.save(region);
-        if (updatedVenta == null) {
+    public ResponseEntity<Rol> updateRol(@PathVariable Integer id, @RequestBody Rol region) {
+        region.setIdRol(id);
+        Rol updatedRol = regionService.save(region);
+        if (updatedRol == null) {
             return ResponseEntity.notFound().build();  
         }
-        return ResponseEntity.ok(updatedVenta);
+        return ResponseEntity.ok(updatedRol);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Venta> partialUpdateVenta(@PathVariable Integer id, @RequestBody Venta region) {
-        Venta existingVenta = regionService.findById(id);
-        if (existingVenta == null) {
+    public ResponseEntity<Rol> partialUpdateRol(@PathVariable Integer id, @RequestBody Rol region) {
+        Rol existingRol = regionService.findById(id);
+        if (existingRol == null) {
             return ResponseEntity.notFound().build();  
         }
         return ResponseEntity.ok(regionService.partialUpdate(region));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteVenta(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteRol(@PathVariable Integer id) {
         regionService.deleteById(id);
         return ResponseEntity.noContent().build();  
     }

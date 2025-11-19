@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.netpick_back.demo.model.Direcciones;
 import com.example.netpick_back.demo.repository.DireccionesRepository;
+import com.example.netpick_back.demo.service.DireccionesService;
 
 import jakarta.transaction.Transactional;
 
@@ -31,21 +32,21 @@ public class DireccionesService {
         return direccionesRepository.save(direcciones);
     }
 
-    public Direcciones partialUpdate(Direcciones direcciones){
+    public Direcciones partialUpdate(Direcciones direcciones) {
         Direcciones existingDirecciones = direccionesRepository.findByIdDireccion(direcciones.getIdDireccion()).orElse(null);
-        if (existingDirecciones != null) {
-            if (direcciones.getDireccion()!= null) {
-                existingDirecciones.setDireccion(direcciones.getDireccion());
-            }
-            if (direcciones.getCodigoPostal()!= null){
-                existingDirecciones.setCodigoPostal(direcciones.getCodigoPostal());
-            }
-            if (direcciones.getPais()!= null){
-                existingDirecciones.setPais(direcciones.getPais());
-            }
-            return direccionesRepository.save(existingDirecciones);
+        if (existingDirecciones == null) {
+            return null;
         }
-        return null;
+        if (direcciones.getDireccion() != null) {
+            existingDirecciones.setDireccion(direcciones.getDireccion());
+        }
+        if (direcciones.getCodigoPostal() != null) {
+            existingDirecciones.setCodigoPostal(direcciones.getCodigoPostal());
+        }
+        if (direcciones.getPais() != null) {
+            existingDirecciones.setPais(direcciones.getPais());
+        }
+        return direccionesRepository.save(existingDirecciones);
     }
 
     public void deleteById(Integer id) {
