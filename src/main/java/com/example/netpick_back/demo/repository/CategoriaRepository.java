@@ -9,7 +9,7 @@ import java.util.Optional;
 import com.example.netpick_back.demo.model.Categoria; 
 
 @Repository
-public interface CategoriaRepository extends JpaRepository<Categoria, Long> {
+public interface CategoriaRepository extends JpaRepository<Categoria, Integer> {
 
     Optional<Categoria> findByIdCategoria (Integer idCategoria);
     List<Categoria> findByNombre (String categoriaNombre);

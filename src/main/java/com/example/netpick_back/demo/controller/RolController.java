@@ -19,7 +19,6 @@ import com.example.netpick_back.demo.service.RolService;
 
 @RestController
 @RequestMapping("/api/rol")
-
 public class RolController {
 
     @Autowired

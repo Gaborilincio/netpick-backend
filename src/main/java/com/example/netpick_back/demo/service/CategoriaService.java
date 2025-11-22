@@ -49,6 +49,6 @@ public class CategoriaService {
     }
 
     public void deleteById(Integer id) {
-        categoriaRepository.deleteById(id.longValue());
+        categoriaRepository.deleteById(id.intValue());
     }
 }
