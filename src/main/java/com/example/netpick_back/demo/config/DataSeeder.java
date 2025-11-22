@@ -47,6 +47,7 @@ public class DataSeeder {
                 admin.setNombre("Admin");
                 admin.setCorreo("admin@correo.com");
                 admin.setClave("admin123");
+                admin.setTelefono("999999999");
                 admin.setRol(adminRol);
                 usuarioRepository.save(admin);
 
@@ -54,11 +55,11 @@ public class DataSeeder {
                 cliente.setNombre("Cliente");
                 cliente.setCorreo("cliente@correo.com");
                 cliente.setClave("cliente123");
+                cliente.setTelefono("888888888");
                 cliente.setRol(clienteRol);
                 usuarioRepository.save(cliente);
             }
 
-            @SuppressWarnings("deprecation")
             Faker faker = new Faker(new Locale("es"));
 
             if (categoriaRepository.count() == 0) {
