@@ -18,7 +18,7 @@ import com.example.netpick_back.demo.model.Categoria;
 import com.example.netpick_back.demo.service.CategoriaService;
 
 @RestController
-@RequestMapping("/api/categoria")
+@RequestMapping("/api/v1/categoria")
 public class CategoriaController {
 
     @Autowired
@@ -26,11 +26,11 @@ public class CategoriaController {
 
     @GetMapping
     public ResponseEntity<List<Categoria>> getAllCategorias() {
-        List<Categoria> carreras = categoriaService.findAll();
-        if (carreras.isEmpty()) {
+        List<Categoria> list = categoriaService.findAll();
+        if (list.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(carreras);
+        return ResponseEntity.ok(list);
     }
 
     @GetMapping("/{id}")
@@ -44,8 +44,7 @@ public class CategoriaController {
 
     @PostMapping
     public ResponseEntity<Categoria> createCategoria(@RequestBody Categoria categoria) {
-        Categoria createdCategoria = categoriaService.save(categoria);
-        return ResponseEntity.status(201).body(createdCategoria);
+        return ResponseEntity.status(201).body(categoriaService.save(categoria));
     }
 
     @PutMapping("/{id}")

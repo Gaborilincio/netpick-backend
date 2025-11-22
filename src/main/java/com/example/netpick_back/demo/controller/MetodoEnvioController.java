@@ -18,7 +18,7 @@ import com.example.netpick_back.demo.model.MetodoEnvio;
 import com.example.netpick_back.demo.service.MetodoEnvioService;
 
 @RestController
-@RequestMapping("/api/metodoenvio")
+@RequestMapping("/api/v1/metodoenvio")
 public class MetodoEnvioController {
 
     @Autowired

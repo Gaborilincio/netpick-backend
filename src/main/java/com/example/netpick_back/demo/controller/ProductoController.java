@@ -18,7 +18,7 @@ import com.example.netpick_back.demo.model.Producto;
 import com.example.netpick_back.demo.service.ProductoService;
 
 @RestController
-@RequestMapping("/api/producto")
+@RequestMapping("/api/v1/producto")
 public class ProductoController {
 
     @Autowired

@@ -18,7 +18,7 @@ import com.example.netpick_back.demo.model.Estado;
 import com.example.netpick_back.demo.service.EstadoService;
 
 @RestController
-@RequestMapping("/api/estado")
+@RequestMapping("/api/v1/estado")
 public class EstadoController {
 
     @Autowired

@@ -18,7 +18,7 @@ import com.example.netpick_back.demo.model.Usuario;
 import com.example.netpick_back.demo.service.UsuarioService;
 
 @RestController
-@RequestMapping("/api/usuario")
+@RequestMapping("/api/v1/usuario")
 public class UsuarioController {
 
     @Autowired

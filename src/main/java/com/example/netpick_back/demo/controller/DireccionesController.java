@@ -18,7 +18,7 @@ import com.example.netpick_back.demo.model.Direcciones;
 import com.example.netpick_back.demo.service.DireccionesService;
 
 @RestController
-@RequestMapping("/api/direcciones")
+@RequestMapping("/api/v1/direcciones")
 public class DireccionesController {
 
     @Autowired

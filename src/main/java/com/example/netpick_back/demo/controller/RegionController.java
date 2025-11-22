@@ -18,7 +18,7 @@ import com.example.netpick_back.demo.model.Region;
 import com.example.netpick_back.demo.service.RegionService;
 
 @RestController
-@RequestMapping("/api/region")
+@RequestMapping("/api/v1/region")
 public class RegionController {
 
     @Autowired
