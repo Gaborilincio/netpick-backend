@@ -1,15 +1,21 @@
 package com.example.netpick_back.demo.config;
 
+import java.util.Locale;
+
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.example.netpick_back.demo.model.Categoria;
+import com.example.netpick_back.demo.model.Producto;
+import com.example.netpick_back.demo.model.Rol;
+import com.example.netpick_back.demo.model.Usuario;
+import com.example.netpick_back.demo.repository.CategoriaRepository;
+import com.example.netpick_back.demo.repository.ProductoRepository;
+import com.example.netpick_back.demo.repository.RolRepository;
+import com.example.netpick_back.demo.repository.UsuarioRepository;
+
 import net.datafaker.Faker;
-
-import com.example.netpick_back.demo.model.*;
-import com.example.netpick_back.demo.repository.*;
-
-import java.util.Locale;
 
 @Configuration
 public class DataSeeder {
@@ -52,6 +58,7 @@ public class DataSeeder {
                 usuarioRepository.save(cliente);
             }
 
+            @SuppressWarnings("deprecation")
             Faker faker = new Faker(new Locale("es"));
 
             if (categoriaRepository.count() == 0) {
@@ -67,7 +74,7 @@ public class DataSeeder {
                 for (int i = 0; i < 20; i++) {
                     Producto p = new Producto();
                     p.setNombre(faker.commerce().productName());
-                    p.setPrecio(Double.valueOf(faker.commerce().price(1000, 100000)));
+                    p.setPrecio(faker.number().numberBetween(1000, 50000));
                     p.setCategoria(categorias.get(faker.random().nextInt(categorias.size())));
                     productoRepository.save(p);
                 }

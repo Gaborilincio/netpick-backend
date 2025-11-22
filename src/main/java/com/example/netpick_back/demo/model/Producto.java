@@ -41,4 +41,7 @@ public class Producto {
     @Column(name = "linkImagenProducto", nullable = false)
     private String linkImagen;
 
+    @ManyToOne
+    @JoinColumn(name = "idCategoria", nullable = false)
+    private Categoria categoria;
 }
