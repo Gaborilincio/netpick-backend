@@ -31,11 +31,10 @@ public class SecurityConfig {
 
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/health", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-
                 .requestMatchers("/api/v1/auth/**").permitAll() 
-
-                .requestMatchers(HttpMethod.GET, "/**").permitAll() 
-
+                .requestMatchers("/register", "/login").permitAll() 
+                .requestMatchers("/api/auth/**", "/api/v1/auth/**").permitAll() 
+                .requestMatchers(HttpMethod.GET, "/**").permitAll()
                 .anyRequest().authenticated()
             )
             .httpBasic(Customizer.withDefaults()); 
