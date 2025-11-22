@@ -5,6 +5,7 @@ import java.util.Locale;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.netpick_back.demo.model.Categoria;
 import com.example.netpick_back.demo.model.Comuna;
@@ -49,7 +50,8 @@ public class DataSeeder {
             EstadoRepository estadoRepository,
             DireccionesRepository direccionesRepository,
             VentaRepository ventaRepository,
-            VentaProductosRepository ventaProductosRepository) {
+            VentaProductosRepository ventaProductosRepository,
+            PasswordEncoder passwordEncoder) {
 
         return args -> {
 
@@ -67,9 +69,9 @@ public class DataSeeder {
                     .stream().findFirst()
                     .orElseThrow(() -> new RuntimeException("Rol CLIENTE no encontrado"));
 
-            if (usuarioRepository.count() == 0) {
-                usuarioRepository.save(new Usuario("Admin", "admin@correo.com", "admin123", "999999999", rolAdmin));
-                usuarioRepository.save(new Usuario("Cliente", "cliente@correo.com", "cliente123", "888888888", rolCliente));
+            if (usuarioRepository.count() == 0 && rolAdmin != null && rolCliente != null) {
+                usuarioRepository.save(new Usuario("Admin", "admin@correo.com", passwordEncoder.encode("admin123"), "999999999", rolAdmin));
+                usuarioRepository.save(new Usuario("Cliente", "cliente@correo.com", passwordEncoder.encode("cliente123"), "888888888", rolCliente));
             }
 
             Usuario usuarioCliente = usuarioRepository.findByNombre("Cliente")
