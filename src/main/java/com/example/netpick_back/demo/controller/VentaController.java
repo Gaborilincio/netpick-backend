@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 import com.example.netpick_back.demo.model.Venta;
 import com.example.netpick_back.demo.service.VentaService;
 
@@ -23,11 +22,11 @@ import com.example.netpick_back.demo.service.VentaService;
 public class VentaController {
 
     @Autowired
-    private VentaService regionService;
+    private VentaService ventaService;
 
     @GetMapping
     public ResponseEntity<List<Venta>> getAllVentas() {
-        List<Venta> carreras = regionService.findAll();
+        List<Venta> carreras = ventaService.findAll();
         if (carreras.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
@@ -36,23 +35,23 @@ public class VentaController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Venta> getVentaById(@PathVariable Integer id) {
-        Venta region = regionService.findById(id);
-        if (region == null) {
+        Venta venta = ventaService.findById(id);
+        if (venta == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(region);
+        return ResponseEntity.ok(venta);
     }
 
     @PostMapping
-    public ResponseEntity<Venta> createVenta(@RequestBody Venta region) {
-        Venta createdVenta = regionService.save(region);
+    public ResponseEntity<Venta> createVenta(@RequestBody Venta venta) {
+        Venta createdVenta = ventaService.save(venta);
         return ResponseEntity.status(201).body(createdVenta);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Venta> updateVenta(@PathVariable Integer id, @RequestBody Venta region) {
-        region.setIdVenta(id);
-        Venta updatedVenta = regionService.save(region);
+    public ResponseEntity<Venta> updateVenta(@PathVariable Integer id, @RequestBody Venta venta) {
+        venta.setIdVenta(id);
+        Venta updatedVenta = ventaService.save(venta);
         if (updatedVenta == null) {
             return ResponseEntity.notFound().build();  
         }
@@ -60,17 +59,17 @@ public class VentaController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Venta> partialUpdateVenta(@PathVariable Integer id, @RequestBody Venta region) {
-        Venta existingVenta = regionService.findById(id);
+    public ResponseEntity<Venta> partialUpdateVenta(@PathVariable Integer id, @RequestBody Venta venta) {
+        Venta existingVenta = ventaService.findById(id);
         if (existingVenta == null) {
             return ResponseEntity.notFound().build();  
         }
-        return ResponseEntity.ok(regionService.partialUpdate(region));
+        return ResponseEntity.ok(ventaService.partialUpdate(venta));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteVenta(@PathVariable Integer id) {
-        regionService.deleteById(id);
+        ventaService.deleteById(id);
         return ResponseEntity.noContent().build();  
     }
 }

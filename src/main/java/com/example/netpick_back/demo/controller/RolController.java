@@ -22,11 +22,11 @@ import com.example.netpick_back.demo.service.RolService;
 public class RolController {
 
     @Autowired
-    private RolService regionService;
+    private RolService rolService;
 
     @GetMapping
     public ResponseEntity<List<Rol>> getAllRols() {
-        List<Rol> carreras = regionService.findAll();
+        List<Rol> carreras = rolService.findAll();
         if (carreras.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
@@ -35,23 +35,23 @@ public class RolController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Rol> getRolById(@PathVariable Integer id) {
-        Rol region = regionService.findById(id);
-        if (region == null) {
+        Rol rol = rolService.findById(id);
+        if (rol == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(region);
+        return ResponseEntity.ok(rol);
     }
 
     @PostMapping
-    public ResponseEntity<Rol> createRol(@RequestBody Rol region) {
-        Rol createdRol = regionService.save(region);
+    public ResponseEntity<Rol> createRol(@RequestBody Rol rol) {
+        Rol createdRol = rolService.save(rol);
         return ResponseEntity.status(201).body(createdRol);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Rol> updateRol(@PathVariable Integer id, @RequestBody Rol region) {
-        region.setIdRol(id);
-        Rol updatedRol = regionService.save(region);
+    public ResponseEntity<Rol> updateRol(@PathVariable Integer id, @RequestBody Rol rol) {
+        rol.setIdRol(id);
+        Rol updatedRol = rolService.save(rol);
         if (updatedRol == null) {
             return ResponseEntity.notFound().build();  
         }
@@ -59,17 +59,17 @@ public class RolController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Rol> partialUpdateRol(@PathVariable Integer id, @RequestBody Rol region) {
-        Rol existingRol = regionService.findById(id);
+    public ResponseEntity<Rol> partialUpdateRol(@PathVariable Integer id, @RequestBody Rol rol) {
+        Rol existingRol = rolService.findById(id);
         if (existingRol == null) {
             return ResponseEntity.notFound().build();  
         }
-        return ResponseEntity.ok(regionService.partialUpdate(region));
+        return ResponseEntity.ok(rolService.partialUpdate(rol));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRol(@PathVariable Integer id) {
-        regionService.deleteById(id);
+        rolService.deleteById(id);
         return ResponseEntity.noContent().build();  
     }
 }
