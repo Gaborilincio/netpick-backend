@@ -1,4 +1,4 @@
-package com.example.elarayax.naves.config;
+package com.example.netpick_back.demo.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
