@@ -24,4 +24,9 @@ public class Categoria {
 
     @Column(name = "descripcionCategoria", length = 300, nullable = false)
     private String descripcion;
+
+    public Categoria(String nombre, String descripcion) {
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+    }
 }

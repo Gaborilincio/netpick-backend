@@ -38,4 +38,12 @@ public class Direcciones {
     @ManyToOne
     @JoinColumn(name = "idComuna", nullable = false)
     private Comuna comuna;
+
+    public Direcciones(String direccion, String codigoPostal, String pais, Usuario usuario, Comuna comuna) {
+        this.direccion = direccion;
+        this.codigoPostal = codigoPostal;
+        this.pais = pais;
+        this.usuario = usuario;
+        this.comuna = comuna;
+    }
 }

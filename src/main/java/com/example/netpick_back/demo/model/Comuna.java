@@ -29,4 +29,9 @@ public class Comuna {
     @JoinColumn(name="idRegion")
     private Region region;
 
+    public Comuna(String nombre, Region region) {
+        this.nombre = nombre;
+        this.region = region;
+    }
+
 }

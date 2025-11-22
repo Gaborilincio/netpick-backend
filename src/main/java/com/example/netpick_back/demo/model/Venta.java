@@ -1,8 +1,5 @@
 package com.example.netpick_back.demo.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -41,5 +38,11 @@ public class Venta {
     @JoinColumn(name = "idUsuario", nullable = false)
     private Usuario usuario;
 
+    public Venta(MetodoPago metodoPago, MetodoEnvio metodoEnvio, Estado estado, Usuario usuario) {
+        this.metodoPago = metodoPago;
+        this.metodoEnvio = metodoEnvio;
+        this.estado = estado;
+        this.usuario = usuario;
+    }
 
 }

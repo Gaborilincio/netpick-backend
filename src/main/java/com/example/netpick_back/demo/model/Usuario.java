@@ -1,7 +1,5 @@
 package com.example.netpick_back.demo.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -39,4 +37,12 @@ public class Usuario {
     @ManyToOne
     @JoinColumn(name = "idRol", nullable = false)
     private Rol rol;
+
+    public Usuario(String nombre, String correo, String clave, String telefono, Rol rol) {
+    this.nombre = nombre;
+    this.correo = correo;
+    this.clave = clave;
+    this.telefono = telefono;
+    this.rol = rol;
+}
 }

@@ -23,4 +23,9 @@ public class Region {
 
     @Column(name = "nombreRegion", length = 50, nullable = false)
     private String nombre;
+
+    public Region(String nombre) {
+    this.nombre = nombre;
+    }
+
 }

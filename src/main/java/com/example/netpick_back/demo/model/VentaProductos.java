@@ -1,8 +1,5 @@
 package com.example.netpick_back.demo.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -32,4 +29,9 @@ public class VentaProductos {
     @ManyToOne
     @JoinColumn(name = "idProducto", nullable = false)
     private Producto producto;
+
+    public VentaProductos(Venta venta, Producto producto) {
+        this.venta = venta;
+        this.producto = producto;
+    }
 }
