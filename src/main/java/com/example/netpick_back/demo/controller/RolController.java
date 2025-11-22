@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 import com.example.netpick_back.demo.model.Rol;
 import com.example.netpick_back.demo.service.RolService;
 
 @RestController
+@RequestMapping("/api/rol")
 
 public class RolController {
 
