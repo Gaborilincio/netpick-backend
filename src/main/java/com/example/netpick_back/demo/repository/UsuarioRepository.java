@@ -12,4 +12,5 @@ import com.example.netpick_back.demo.model.Usuario;
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     Optional<Usuario> findByIdUsuario (Integer idUsuario);
     List<Usuario> findByNombre (String nombre);
+    Optional<Usuario> findByCorreo(String correo);
 }
