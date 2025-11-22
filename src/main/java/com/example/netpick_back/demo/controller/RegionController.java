@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 import com.example.netpick_back.demo.model.Region;
 import com.example.netpick_back.demo.service.RegionService;
 
@@ -27,11 +26,11 @@ public class RegionController {
 
     @GetMapping
     public ResponseEntity<List<Region>> getAllRegions() {
-        List<Region> carreras = regionService.findAll();
-        if (carreras.isEmpty()) {
+        List<Region> list = regionService.findAll();
+        if (list.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(carreras);
+        return ResponseEntity.ok(list);
     }
 
     @GetMapping("/{id}")
@@ -45,8 +44,7 @@ public class RegionController {
 
     @PostMapping
     public ResponseEntity<Region> createRegion(@RequestBody Region region) {
-        Region createdRegion = regionService.save(region);
-        return ResponseEntity.status(201).body(createdRegion);
+        return ResponseEntity.status(201).body(regionService.save(region));
     }
 
     @PutMapping("/{id}")
@@ -54,7 +52,7 @@ public class RegionController {
         region.setIdRegion(id);
         Region updatedRegion = regionService.save(region);
         if (updatedRegion == null) {
-            return ResponseEntity.notFound().build();  
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(updatedRegion);
     }
@@ -63,14 +61,15 @@ public class RegionController {
     public ResponseEntity<Region> partialUpdateRegion(@PathVariable Integer id, @RequestBody Region region) {
         Region existingRegion = regionService.findById(id);
         if (existingRegion == null) {
-            return ResponseEntity.notFound().build();  
+            return ResponseEntity.notFound().build();
         }
+        region.setIdRegion(id);
         return ResponseEntity.ok(regionService.partialUpdate(region));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRegion(@PathVariable Integer id) {
         regionService.deleteById(id);
-        return ResponseEntity.noContent().build();  
+        return ResponseEntity.noContent().build();
     }
 }

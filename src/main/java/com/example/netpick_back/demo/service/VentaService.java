@@ -2,7 +2,6 @@ package com.example.netpick_back.demo.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.netpick_back.demo.model.Venta;
@@ -12,19 +11,20 @@ import jakarta.transaction.Transactional;
 
 @Service
 @Transactional
-@SuppressWarnings("null")
 public class VentaService {
 
-    @Autowired
-    private VentaRepository ventaRepository;
+    private final VentaRepository ventaRepository;
+
+    public VentaService(VentaRepository ventaRepository) {
+        this.ventaRepository = ventaRepository;
+    }
 
     public List<Venta> findAll() {
         return ventaRepository.findAll();
     }
 
     public Venta findById(Integer id) {
-        Venta venta = ventaRepository.findByIdVenta(id).orElse(null);
-        return venta;
+        return ventaRepository.findById(id).orElse(null);
     }
 
     public Venta save(Venta venta) {
@@ -32,23 +32,23 @@ public class VentaService {
     }
 
     public Venta partialUpdate(Venta venta) {
-        Venta existingVenta = ventaRepository.findByIdVenta(venta.getIdVenta()).orElse(null);
-        if (existingVenta == null) {
-            return null;
+        Venta existing = ventaRepository.findById(venta.getIdVenta()).orElse(null);
+        if (existing != null) {
+            if (venta.getMetodoPago() != null) {
+                existing.setMetodoPago(venta.getMetodoPago());
+            }
+            if (venta.getMetodoEnvio() != null) {
+                existing.setMetodoEnvio(venta.getMetodoEnvio());
+            }
+            if (venta.getEstado() != null) {
+                existing.setEstado(venta.getEstado());
+            }
+            if (venta.getUsuario() != null) {
+                existing.setUsuario(venta.getUsuario());
+            }
+            return ventaRepository.save(existing);
         }
-        if (venta.getEstado() != null) {
-            existingVenta.setEstado(venta.getEstado());
-        }
-        if (venta.getMetodoPago() != null) {
-            existingVenta.setMetodoPago(venta.getMetodoPago());
-        }
-        if (venta.getMetodoEnvio() != null) {
-            existingVenta.setMetodoEnvio(venta.getMetodoEnvio());
-        }
-        if (venta.getUsuario() != null) {
-            existingVenta.setUsuario(venta.getUsuario());
-        }
-        return ventaRepository.save(existingVenta);
+        return null;
     }
 
     public void deleteById(Integer id) {

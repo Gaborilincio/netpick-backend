@@ -12,7 +12,6 @@ import jakarta.transaction.Transactional;
 
 @Service
 @Transactional
-@SuppressWarnings("null")
 public class CategoriaService {
 
     @Autowired
@@ -23,31 +22,29 @@ public class CategoriaService {
     }
 
     public Categoria findById(Integer id) {
-        Categoria categoria = categoriaRepository.findByIdCategoria(id).orElse(null);
-        return categoria;
+        return categoriaRepository.findById(id).orElse(null);
     }
 
     public Categoria save(Categoria categoria) {
         return categoriaRepository.save(categoria);
     }
 
-    public Categoria partialUpdate(Categoria categoria){
-        Categoria existingCategoria = categoriaRepository.findByIdCategoria(categoria.getIdCategoria()).orElse(null);
+    public Categoria partialUpdate(Categoria categoria) {
+        Categoria existingCategoria = categoriaRepository.findById(categoria.getIdCategoria()).orElse(null);
+        
         if (existingCategoria != null) {
             if (categoria.getNombre() != null) {
                 existingCategoria.setNombre(categoria.getNombre());
             }
-
-            if(categoria.getDescripcion() != null) {
+            if (categoria.getDescripcion() != null) {
                 existingCategoria.setDescripcion(categoria.getDescripcion());
             }
-
             return categoriaRepository.save(existingCategoria);
         }
         return null;
     }
 
     public void deleteById(Integer id) {
-        categoriaRepository.deleteById(id.intValue());
+        categoriaRepository.deleteById(id);
     }
 }

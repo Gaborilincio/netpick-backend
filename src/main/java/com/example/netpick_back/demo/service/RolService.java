@@ -2,7 +2,6 @@ package com.example.netpick_back.demo.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.netpick_back.demo.model.Rol;
@@ -12,19 +11,20 @@ import jakarta.transaction.Transactional;
 
 @Service
 @Transactional
-@SuppressWarnings("null")
 public class RolService {
 
-    @Autowired
-    private RolRepository rolRepository;
+    private final RolRepository rolRepository;
+
+    public RolService(RolRepository rolRepository) {
+        this.rolRepository = rolRepository;
+    }
 
     public List<Rol> findAll() {
         return rolRepository.findAll();
     }
 
     public Rol findById(Integer id) {
-        Rol rol = rolRepository.findByIdRol(id).orElse(null);
-        return rol;
+        return rolRepository.findById(id).orElse(null);
     }
 
     public Rol save(Rol rol) {
@@ -32,14 +32,14 @@ public class RolService {
     }
 
     public Rol partialUpdate(Rol rol) {
-        Rol existingRol = rolRepository.findByIdRol(rol.getIdRol()).orElse(null);
-        if (existingRol == null) {
-            return null;
+        Rol existing = rolRepository.findById(rol.getIdRol()).orElse(null);
+        if (existing != null) {
+            if (rol.getNombre() != null) {
+                existing.setNombre(rol.getNombre());
+            }
+            return rolRepository.save(existing);
         }
-        if (rol.getNombre() != null) {
-            existingRol.setNombre(rol.getNombre());
-        }
-        return rolRepository.save(existingRol);
+        return null;
     }
 
     public void deleteById(Integer id) {

@@ -2,7 +2,6 @@ package com.example.netpick_back.demo.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.netpick_back.demo.model.Producto;
@@ -12,19 +11,20 @@ import jakarta.transaction.Transactional;
 
 @Service
 @Transactional
-@SuppressWarnings("null")
 public class ProductoService {
 
-    @Autowired
-    private ProductoRepository productoRepository;
+    private final ProductoRepository productoRepository;
+
+    public ProductoService(ProductoRepository productoRepository) {
+        this.productoRepository = productoRepository;
+    }
 
     public List<Producto> findAll() {
         return productoRepository.findAll();
     }
 
     public Producto findById(Integer id) {
-        Producto producto = productoRepository.findByIdProducto(id).orElse(null);
-        return producto;
+        return productoRepository.findById(id).orElse(null);
     }
 
     public Producto save(Producto producto) {
@@ -32,26 +32,29 @@ public class ProductoService {
     }
 
     public Producto partialUpdate(Producto producto) {
-        Producto existingProducto = productoRepository.findByIdProducto(producto.getIdProducto()).orElse(null);
-        if (existingProducto == null) {
-            return null;
+        Producto existing = productoRepository.findById(producto.getIdProducto()).orElse(null);
+        if (existing != null) {
+            if (producto.getNombre() != null) {
+                existing.setNombre(producto.getNombre());
+            }
+            if (producto.getDescripcion() != null) {
+                existing.setDescripcion(producto.getDescripcion());
+            }
+            if (producto.getPrecio() != null) {
+                existing.setPrecio(producto.getPrecio());
+            }
+            if (producto.getStock() != null) {
+                existing.setStock(producto.getStock());
+            }
+            if (producto.getLinkImagen() != null) {
+                existing.setLinkImagen(producto.getLinkImagen());
+            }
+            if (producto.getCategoria() != null) {
+                existing.setCategoria(producto.getCategoria());
+            }
+            return productoRepository.save(existing);
         }
-        if (producto.getNombre() != null) {
-            existingProducto.setNombre(producto.getNombre());
-        }
-        if (producto.getPrecio() != null) {
-            existingProducto.setPrecio(producto.getPrecio());
-        }
-        if (producto.getDescripcion() != null) {
-            existingProducto.setDescripcion(producto.getDescripcion());
-        }
-        if (producto.getLinkImagen() != null) {
-            existingProducto.setLinkImagen(producto.getLinkImagen());
-        }
-        if (producto.getStock() != null) {
-            existingProducto.setStock(producto.getStock());
-        }
-        return productoRepository.save(existingProducto);
+        return null;
     }
 
     public void deleteById(Integer id) {

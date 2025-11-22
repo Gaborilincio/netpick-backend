@@ -2,30 +2,29 @@ package com.example.netpick_back.demo.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.netpick_back.demo.model.Direcciones;
 import com.example.netpick_back.demo.repository.DireccionesRepository;
-import com.example.netpick_back.demo.service.DireccionesService;
 
 import jakarta.transaction.Transactional;
 
 @Service
 @Transactional
-@SuppressWarnings("null")
 public class DireccionesService {
 
-    @Autowired
-    private DireccionesRepository direccionesRepository;
+    private final DireccionesRepository direccionesRepository;
+
+    public DireccionesService(DireccionesRepository direccionesRepository) {
+        this.direccionesRepository = direccionesRepository;
+    }
 
     public List<Direcciones> findAll() {
         return direccionesRepository.findAll();
     }
 
     public Direcciones findById(Integer id) {
-        Direcciones direcciones = direccionesRepository.findByIdDireccion(id).orElse(null);
-        return direcciones;
+        return direccionesRepository.findById(id).orElse(null);
     }
 
     public Direcciones save(Direcciones direcciones) {
@@ -33,20 +32,26 @@ public class DireccionesService {
     }
 
     public Direcciones partialUpdate(Direcciones direcciones) {
-        Direcciones existingDirecciones = direccionesRepository.findByIdDireccion(direcciones.getIdDireccion()).orElse(null);
-        if (existingDirecciones == null) {
-            return null;
+        Direcciones existing = direccionesRepository.findById(direcciones.getIdDireccion()).orElse(null);
+        if (existing != null) {
+            if (direcciones.getDireccion() != null) {
+                existing.setDireccion(direcciones.getDireccion());
+            }
+            if (direcciones.getCodigoPostal() != null) {
+                existing.setCodigoPostal(direcciones.getCodigoPostal());
+            }
+            if (direcciones.getPais() != null) {
+                existing.setPais(direcciones.getPais());
+            }
+            if (direcciones.getUsuario() != null) {
+                existing.setUsuario(direcciones.getUsuario());
+            }
+            if (direcciones.getComuna() != null) {
+                existing.setComuna(direcciones.getComuna());
+            }
+            return direccionesRepository.save(existing);
         }
-        if (direcciones.getDireccion() != null) {
-            existingDirecciones.setDireccion(direcciones.getDireccion());
-        }
-        if (direcciones.getCodigoPostal() != null) {
-            existingDirecciones.setCodigoPostal(direcciones.getCodigoPostal());
-        }
-        if (direcciones.getPais() != null) {
-            existingDirecciones.setPais(direcciones.getPais());
-        }
-        return direccionesRepository.save(existingDirecciones);
+        return null;
     }
 
     public void deleteById(Integer id) {

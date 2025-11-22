@@ -2,30 +2,29 @@ package com.example.netpick_back.demo.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.netpick_back.demo.model.Estado;
 import com.example.netpick_back.demo.repository.EstadoRepository;
-import com.example.netpick_back.demo.service.EstadoService;
 
 import jakarta.transaction.Transactional;
 
 @Service
 @Transactional
-@SuppressWarnings("null")
 public class EstadoService {
 
-    @Autowired
-    private EstadoRepository estadoRepository;
+    private final EstadoRepository estadoRepository;
+
+    public EstadoService(EstadoRepository estadoRepository) {
+        this.estadoRepository = estadoRepository;
+    }
 
     public List<Estado> findAll() {
         return estadoRepository.findAll();
     }
 
     public Estado findById(Integer id) {
-        Estado estado = estadoRepository.findByIdEstado(id).orElse(null);
-        return estado;
+        return estadoRepository.findById(id).orElse(null);
     }
 
     public Estado save(Estado estado) {
@@ -33,14 +32,14 @@ public class EstadoService {
     }
 
     public Estado partialUpdate(Estado estado) {
-        Estado existingEstado = estadoRepository.findByIdEstado(estado.getIdEstado()).orElse(null);
-        if (existingEstado == null) {
-            return null;
+        Estado existing = estadoRepository.findById(estado.getIdEstado()).orElse(null);
+        if (existing != null) {
+            if (estado.getNombre() != null) {
+                existing.setNombre(estado.getNombre());
+            }
+            return estadoRepository.save(existing);
         }
-        if (estado.getNombre() != null) {
-            existingEstado.setNombre(estado.getNombre());
-        }
-        return estadoRepository.save(existingEstado);
+        return null;
     }
 
     public void deleteById(Integer id) {

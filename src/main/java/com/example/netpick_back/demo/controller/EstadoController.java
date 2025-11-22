@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 import com.example.netpick_back.demo.model.Estado;
 import com.example.netpick_back.demo.service.EstadoService;
 
@@ -27,11 +26,11 @@ public class EstadoController {
 
     @GetMapping
     public ResponseEntity<List<Estado>> getAllEstados() {
-        List<Estado> carreras = estadoService.findAll();
-        if (carreras.isEmpty()) {
+        List<Estado> list = estadoService.findAll();
+        if (list.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(carreras);
+        return ResponseEntity.ok(list);
     }
 
     @GetMapping("/{id}")
@@ -45,8 +44,7 @@ public class EstadoController {
 
     @PostMapping
     public ResponseEntity<Estado> createEstado(@RequestBody Estado estado) {
-        Estado createdEstado = estadoService.save(estado);
-        return ResponseEntity.status(201).body(createdEstado);
+        return ResponseEntity.status(201).body(estadoService.save(estado));
     }
 
     @PutMapping("/{id}")
@@ -54,7 +52,7 @@ public class EstadoController {
         estado.setIdEstado(id);
         Estado updatedEstado = estadoService.save(estado);
         if (updatedEstado == null) {
-            return ResponseEntity.notFound().build();  
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(updatedEstado);
     }
@@ -63,14 +61,15 @@ public class EstadoController {
     public ResponseEntity<Estado> partialUpdateEstado(@PathVariable Integer id, @RequestBody Estado estado) {
         Estado existingEstado = estadoService.findById(id);
         if (existingEstado == null) {
-            return ResponseEntity.notFound().build();  
+            return ResponseEntity.notFound().build();
         }
+        estado.setIdEstado(id);
         return ResponseEntity.ok(estadoService.partialUpdate(estado));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEstado(@PathVariable Integer id) {
         estadoService.deleteById(id);
-        return ResponseEntity.noContent().build();  
+        return ResponseEntity.noContent().build();
     }
 }

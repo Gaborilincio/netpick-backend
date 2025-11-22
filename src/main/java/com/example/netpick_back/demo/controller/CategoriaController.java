@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 import com.example.netpick_back.demo.model.Categoria;
 import com.example.netpick_back.demo.service.CategoriaService;
 
@@ -54,7 +53,7 @@ public class CategoriaController {
         categoria.setIdCategoria(id);
         Categoria updatedCategoria = categoriaService.save(categoria);
         if (updatedCategoria == null) {
-            return ResponseEntity.notFound().build();  
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(updatedCategoria);
     }
@@ -63,14 +62,15 @@ public class CategoriaController {
     public ResponseEntity<Categoria> partialUpdateCategoria(@PathVariable Integer id, @RequestBody Categoria categoria) {
         Categoria existingCategoria = categoriaService.findById(id);
         if (existingCategoria == null) {
-            return ResponseEntity.notFound().build();  
+            return ResponseEntity.notFound().build();
         }
+        categoria.setIdCategoria(id);
         return ResponseEntity.ok(categoriaService.partialUpdate(categoria));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCategoria(@PathVariable Integer id) {
         categoriaService.deleteById(id);
-        return ResponseEntity.noContent().build();  
+        return ResponseEntity.noContent().build();
     }
 }

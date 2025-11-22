@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 import com.example.netpick_back.demo.model.MetodoEnvio;
 import com.example.netpick_back.demo.service.MetodoEnvioService;
 
@@ -27,11 +26,11 @@ public class MetodoEnvioController {
 
     @GetMapping
     public ResponseEntity<List<MetodoEnvio>> getAllMetodoEnvios() {
-        List<MetodoEnvio> carreras = metodoenvioService.findAll();
-        if (carreras.isEmpty()) {
+        List<MetodoEnvio> list = metodoenvioService.findAll();
+        if (list.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(carreras);
+        return ResponseEntity.ok(list);
     }
 
     @GetMapping("/{id}")
@@ -45,8 +44,7 @@ public class MetodoEnvioController {
 
     @PostMapping
     public ResponseEntity<MetodoEnvio> createMetodoEnvio(@RequestBody MetodoEnvio metodoenvio) {
-        MetodoEnvio createdMetodoEnvio = metodoenvioService.save(metodoenvio);
-        return ResponseEntity.status(201).body(createdMetodoEnvio);
+        return ResponseEntity.status(201).body(metodoenvioService.save(metodoenvio));
     }
 
     @PutMapping("/{id}")
@@ -54,7 +52,7 @@ public class MetodoEnvioController {
         metodoenvio.setIdMetodoEnvio(id);
         MetodoEnvio updatedMetodoEnvio = metodoenvioService.save(metodoenvio);
         if (updatedMetodoEnvio == null) {
-            return ResponseEntity.notFound().build();  
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(updatedMetodoEnvio);
     }
@@ -63,14 +61,15 @@ public class MetodoEnvioController {
     public ResponseEntity<MetodoEnvio> partialUpdateMetodoEnvio(@PathVariable Integer id, @RequestBody MetodoEnvio metodoenvio) {
         MetodoEnvio existingMetodoEnvio = metodoenvioService.findById(id);
         if (existingMetodoEnvio == null) {
-            return ResponseEntity.notFound().build();  
+            return ResponseEntity.notFound().build();
         }
+        metodoenvio.setIdMetodoEnvio(id);
         return ResponseEntity.ok(metodoenvioService.partialUpdate(metodoenvio));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMetodoEnvio(@PathVariable Integer id) {
         metodoenvioService.deleteById(id);
-        return ResponseEntity.noContent().build();  
+        return ResponseEntity.noContent().build();
     }
 }

@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 import com.example.netpick_back.demo.model.Direcciones;
 import com.example.netpick_back.demo.service.DireccionesService;
 
@@ -27,11 +26,11 @@ public class DireccionesController {
 
     @GetMapping
     public ResponseEntity<List<Direcciones>> getAllDireccioness() {
-        List<Direcciones> carreras = direccionesService.findAll();
-        if (carreras.isEmpty()) {
+        List<Direcciones> list = direccionesService.findAll();
+        if (list.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(carreras);
+        return ResponseEntity.ok(list);
     }
 
     @GetMapping("/{id}")
@@ -45,8 +44,7 @@ public class DireccionesController {
 
     @PostMapping
     public ResponseEntity<Direcciones> createDirecciones(@RequestBody Direcciones direcciones) {
-        Direcciones createdDirecciones = direccionesService.save(direcciones);
-        return ResponseEntity.status(201).body(createdDirecciones);
+        return ResponseEntity.status(201).body(direccionesService.save(direcciones));
     }
 
     @PutMapping("/{id}")
@@ -54,7 +52,7 @@ public class DireccionesController {
         direcciones.setIdDireccion(id);
         Direcciones updatedDirecciones = direccionesService.save(direcciones);
         if (updatedDirecciones == null) {
-            return ResponseEntity.notFound().build();  
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(updatedDirecciones);
     }
@@ -63,14 +61,15 @@ public class DireccionesController {
     public ResponseEntity<Direcciones> partialUpdateDirecciones(@PathVariable Integer id, @RequestBody Direcciones direcciones) {
         Direcciones existingDirecciones = direccionesService.findById(id);
         if (existingDirecciones == null) {
-            return ResponseEntity.notFound().build();  
+            return ResponseEntity.notFound().build();
         }
+        direcciones.setIdDireccion(id);
         return ResponseEntity.ok(direccionesService.partialUpdate(direcciones));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteDirecciones(@PathVariable Integer id) {
         direccionesService.deleteById(id);
-        return ResponseEntity.noContent().build();  
+        return ResponseEntity.noContent().build();
     }
 }

@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 import com.example.netpick_back.demo.model.MetodoPago;
 import com.example.netpick_back.demo.service.MetodoPagoService;
 
@@ -27,11 +26,11 @@ public class MetodoPagoController {
 
     @GetMapping
     public ResponseEntity<List<MetodoPago>> getAllMetodoPagos() {
-        List<MetodoPago> carreras = metodopagoService.findAll();
-        if (carreras.isEmpty()) {
+        List<MetodoPago> list = metodopagoService.findAll();
+        if (list.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(carreras);
+        return ResponseEntity.ok(list);
     }
 
     @GetMapping("/{id}")
@@ -45,8 +44,7 @@ public class MetodoPagoController {
 
     @PostMapping
     public ResponseEntity<MetodoPago> createMetodoPago(@RequestBody MetodoPago metodopago) {
-        MetodoPago createdMetodoPago = metodopagoService.save(metodopago);
-        return ResponseEntity.status(201).body(createdMetodoPago);
+        return ResponseEntity.status(201).body(metodopagoService.save(metodopago));
     }
 
     @PutMapping("/{id}")
@@ -54,7 +52,7 @@ public class MetodoPagoController {
         metodopago.setIdMetodoPago(id);
         MetodoPago updatedMetodoPago = metodopagoService.save(metodopago);
         if (updatedMetodoPago == null) {
-            return ResponseEntity.notFound().build();  
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(updatedMetodoPago);
     }
@@ -63,14 +61,15 @@ public class MetodoPagoController {
     public ResponseEntity<MetodoPago> partialUpdateMetodoPago(@PathVariable Integer id, @RequestBody MetodoPago metodopago) {
         MetodoPago existingMetodoPago = metodopagoService.findById(id);
         if (existingMetodoPago == null) {
-            return ResponseEntity.notFound().build();  
+            return ResponseEntity.notFound().build();
         }
+        metodopago.setIdMetodoPago(id);
         return ResponseEntity.ok(metodopagoService.partialUpdate(metodopago));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMetodoPago(@PathVariable Integer id) {
         metodopagoService.deleteById(id);
-        return ResponseEntity.noContent().build();  
+        return ResponseEntity.noContent().build();
     }
 }

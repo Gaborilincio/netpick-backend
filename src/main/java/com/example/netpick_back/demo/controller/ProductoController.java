@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 import com.example.netpick_back.demo.model.Producto;
 import com.example.netpick_back.demo.service.ProductoService;
 
@@ -27,11 +26,11 @@ public class ProductoController {
 
     @GetMapping
     public ResponseEntity<List<Producto>> getAllProductos() {
-        List<Producto> carreras = productoService.findAll();
-        if (carreras.isEmpty()) {
+        List<Producto> list = productoService.findAll();
+        if (list.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(carreras);
+        return ResponseEntity.ok(list);
     }
 
     @GetMapping("/{id}")
@@ -45,8 +44,7 @@ public class ProductoController {
 
     @PostMapping
     public ResponseEntity<Producto> createProducto(@RequestBody Producto producto) {
-        Producto createdProducto = productoService.save(producto);
-        return ResponseEntity.status(201).body(createdProducto);
+        return ResponseEntity.status(201).body(productoService.save(producto));
     }
 
     @PutMapping("/{id}")
@@ -54,7 +52,7 @@ public class ProductoController {
         producto.setIdProducto(id);
         Producto updatedProducto = productoService.save(producto);
         if (updatedProducto == null) {
-            return ResponseEntity.notFound().build();  
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(updatedProducto);
     }
@@ -63,14 +61,15 @@ public class ProductoController {
     public ResponseEntity<Producto> partialUpdateProducto(@PathVariable Integer id, @RequestBody Producto producto) {
         Producto existingProducto = productoService.findById(id);
         if (existingProducto == null) {
-            return ResponseEntity.notFound().build();  
+            return ResponseEntity.notFound().build();
         }
+        producto.setIdProducto(id);
         return ResponseEntity.ok(productoService.partialUpdate(producto));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProducto(@PathVariable Integer id) {
         productoService.deleteById(id);
-        return ResponseEntity.noContent().build();  
+        return ResponseEntity.noContent().build();
     }
 }

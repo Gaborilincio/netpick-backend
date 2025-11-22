@@ -2,7 +2,6 @@ package com.example.netpick_back.demo.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.netpick_back.demo.model.Region;
@@ -12,19 +11,20 @@ import jakarta.transaction.Transactional;
 
 @Service
 @Transactional
-@SuppressWarnings("null")
 public class RegionService {
 
-    @Autowired
-    private RegionRepository regionRepository;
+    private final RegionRepository regionRepository;
+
+    public RegionService(RegionRepository regionRepository) {
+        this.regionRepository = regionRepository;
+    }
 
     public List<Region> findAll() {
         return regionRepository.findAll();
     }
 
     public Region findById(Integer id) {
-        Region region = regionRepository.findByIdRegion(id).orElse(null);
-        return region;
+        return regionRepository.findById(id).orElse(null);
     }
 
     public Region save(Region region) {
@@ -32,14 +32,14 @@ public class RegionService {
     }
 
     public Region partialUpdate(Region region) {
-        Region existingRegion = regionRepository.findByIdRegion(region.getIdRegion()).orElse(null);
-        if (existingRegion == null) {
-            return null;
+        Region existing = regionRepository.findById(region.getIdRegion()).orElse(null);
+        if (existing != null) {
+            if (region.getNombre() != null) {
+                existing.setNombre(region.getNombre());
+            }
+            return regionRepository.save(existing);
         }
-        if (region.getNombre() != null) {
-            existingRegion.setNombre(region.getNombre());
-        }
-        return regionRepository.save(existingRegion);
+        return null;
     }
 
     public void deleteById(Integer id) {

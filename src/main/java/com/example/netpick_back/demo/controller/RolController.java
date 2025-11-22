@@ -26,11 +26,11 @@ public class RolController {
 
     @GetMapping
     public ResponseEntity<List<Rol>> getAllRols() {
-        List<Rol> carreras = rolService.findAll();
-        if (carreras.isEmpty()) {
+        List<Rol> list = rolService.findAll();
+        if (list.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(carreras);
+        return ResponseEntity.ok(list);
     }
 
     @GetMapping("/{id}")
@@ -44,8 +44,7 @@ public class RolController {
 
     @PostMapping
     public ResponseEntity<Rol> createRol(@RequestBody Rol rol) {
-        Rol createdRol = rolService.save(rol);
-        return ResponseEntity.status(201).body(createdRol);
+        return ResponseEntity.status(201).body(rolService.save(rol));
     }
 
     @PutMapping("/{id}")
@@ -53,7 +52,7 @@ public class RolController {
         rol.setIdRol(id);
         Rol updatedRol = rolService.save(rol);
         if (updatedRol == null) {
-            return ResponseEntity.notFound().build();  
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(updatedRol);
     }
@@ -62,14 +61,15 @@ public class RolController {
     public ResponseEntity<Rol> partialUpdateRol(@PathVariable Integer id, @RequestBody Rol rol) {
         Rol existingRol = rolService.findById(id);
         if (existingRol == null) {
-            return ResponseEntity.notFound().build();  
+            return ResponseEntity.notFound().build();
         }
+        rol.setIdRol(id);
         return ResponseEntity.ok(rolService.partialUpdate(rol));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRol(@PathVariable Integer id) {
         rolService.deleteById(id);
-        return ResponseEntity.noContent().build();  
+        return ResponseEntity.noContent().build();
     }
 }

@@ -26,11 +26,11 @@ public class VentaController {
 
     @GetMapping
     public ResponseEntity<List<Venta>> getAllVentas() {
-        List<Venta> carreras = ventaService.findAll();
-        if (carreras.isEmpty()) {
+        List<Venta> list = ventaService.findAll();
+        if (list.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(carreras);
+        return ResponseEntity.ok(list);
     }
 
     @GetMapping("/{id}")
@@ -44,8 +44,7 @@ public class VentaController {
 
     @PostMapping
     public ResponseEntity<Venta> createVenta(@RequestBody Venta venta) {
-        Venta createdVenta = ventaService.save(venta);
-        return ResponseEntity.status(201).body(createdVenta);
+        return ResponseEntity.status(201).body(ventaService.save(venta));
     }
 
     @PutMapping("/{id}")
@@ -53,7 +52,7 @@ public class VentaController {
         venta.setIdVenta(id);
         Venta updatedVenta = ventaService.save(venta);
         if (updatedVenta == null) {
-            return ResponseEntity.notFound().build();  
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(updatedVenta);
     }
@@ -62,14 +61,15 @@ public class VentaController {
     public ResponseEntity<Venta> partialUpdateVenta(@PathVariable Integer id, @RequestBody Venta venta) {
         Venta existingVenta = ventaService.findById(id);
         if (existingVenta == null) {
-            return ResponseEntity.notFound().build();  
+            return ResponseEntity.notFound().build();
         }
+        venta.setIdVenta(id);
         return ResponseEntity.ok(ventaService.partialUpdate(venta));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteVenta(@PathVariable Integer id) {
         ventaService.deleteById(id);
-        return ResponseEntity.noContent().build();  
+        return ResponseEntity.noContent().build();
     }
 }
