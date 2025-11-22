@@ -21,7 +21,6 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             
-            // CONFIGURACIÓN CORS (VERSIÓN CORTA EN LÍNEA)
             .cors(cors -> cors.configurationSource(request -> {
                 CorsConfiguration config = new CorsConfiguration();
                 config.applyPermitDefaultValues(); 
