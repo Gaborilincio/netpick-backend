@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import com.example.netpick_back.demo.model.Categoria;
 import com.example.netpick_back.demo.repository.CategoriaRepository;
-import com.example.netpick_back.demo.service.CategoriaService;
 
 import jakarta.transaction.Transactional;
 
