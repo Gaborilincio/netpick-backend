@@ -29,14 +29,13 @@ public class AuthController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody Map<String, String> request) {
 
         String correo = request.get("correo");
         String clave = request.get("clave");
         String nombre = request.get("nombre");
-        String telefono = request.get("telefono"); 
+        String telefono = request.get("telefono");
 
         if (correo == null || clave == null || nombre == null || telefono == null) {
             return ResponseEntity.badRequest().body("Todos los campos son obligatorios: nombre, correo, clave, telefono.");
