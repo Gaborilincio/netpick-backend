@@ -65,29 +65,34 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> request) {
+        try {
+            String correo = request.get("correo");
+            String clave = request.get("clave");
 
-        String correo = request.get("correo");
-        String clave = request.get("clave");
+            if (correo == null || clave == null) {
+                return ResponseEntity.badRequest().body("Debe ingresar correo y clave.");
+            }
 
-        if (correo == null || clave == null) {
-            return ResponseEntity.badRequest().body("Debe ingresar correo y clave.");
+            Usuario usuario = usuarioService.findByCorreo(correo).orElse(null);
+
+            if (usuario == null) {
+                return ResponseEntity.status(401).body("Credenciales inválidas");
+            }
+
+            if (!passwordEncoder.matches(clave, usuario.getClave())) {
+                return ResponseEntity.status(401).body("Credenciales inválidas");
+            }
+
+            return ResponseEntity.ok(Map.of(
+                "message", "Login exitoso",
+                "userId", usuario.getIdUsuario(),
+                "nombre", usuario.getNombre(),
+                "rol", usuario.getRol().getNombre()
+            ));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body("ERROR DEL SERVIDOR: " + e.getMessage());
         }
-
-        Usuario usuario = usuarioService.findByCorreo(correo).orElse(null);
-
-        if (usuario == null) {
-            return ResponseEntity.status(401).body("Credenciales inválidas");
-        }
-
-        if (!passwordEncoder.matches(clave, usuario.getClave())) {
-            return ResponseEntity.status(401).body("Credenciales inválidas");
-        }
-
-        return ResponseEntity.ok(Map.of(
-            "message", "Login exitoso",
-            "userId", usuario.getIdUsuario(),
-            "nombre", usuario.getNombre(),
-            "rol", usuario.getRol().getNombre()
-        ));
     }
 }
