@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.netpick_back.demo.model.Producto;
@@ -40,6 +41,23 @@ public class ProductoController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(producto);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Producto>> getProductos(
+        @RequestParam(required = false) Integer categoriaId, 
+        @RequestParam(required = false) Integer minPrice,
+        @RequestParam(required = false) Integer maxPrice) 
+    {
+        List<Producto> productos = productoService.findFilteredProducts(
+            categoriaId, 
+            minPrice, 
+            maxPrice
+        );
+        if (productos.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(productos);
     }
 
     @PostMapping

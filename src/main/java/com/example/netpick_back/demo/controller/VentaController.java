@@ -24,6 +24,15 @@ public class VentaController {
     @Autowired
     private VentaService ventaService;
 
+    @GetMapping("/usuario/{userId}")
+    public ResponseEntity<List<Venta>> getVentasByUsuario(@PathVariable Integer userId) {
+        List<Venta> list = ventaService.findByUsuarioId(userId); 
+        if (list.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(list);
+    }
+
     @GetMapping
     public ResponseEntity<List<Venta>> getAllVentas() {
         List<Venta> list = ventaService.findAll();

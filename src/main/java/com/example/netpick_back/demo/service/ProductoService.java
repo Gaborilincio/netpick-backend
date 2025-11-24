@@ -1,12 +1,15 @@
 package com.example.netpick_back.demo.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.example.netpick_back.demo.model.Producto;
 import com.example.netpick_back.demo.repository.ProductoRepository;
 
+import jakarta.persistence.criteria.Predicate;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -17,6 +20,36 @@ public class ProductoService {
 
     public ProductoService(ProductoRepository productoRepository) {
         this.productoRepository = productoRepository;
+    }
+
+    public List<Producto> findFilteredProducts(Integer categoriaId, Integer minPrice, Integer maxPrice) {
+        
+        Specification<Producto> spec = (root, query, criteriaBuilder) -> {
+            
+            List<Predicate> predicates = new ArrayList<>();
+
+            if (categoriaId != null && categoriaId != 0) { 
+                predicates.add(criteriaBuilder.equal(
+                    root.get("categoria").get("idCategoria"), categoriaId)
+                );
+            }
+
+            if (minPrice != null && minPrice >= 0) {
+                predicates.add(criteriaBuilder.greaterThanOrEqualTo(
+                    root.get("precio"), minPrice)
+                );
+            }
+
+            if (maxPrice != null && maxPrice > 0) {
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(
+                    root.get("precio"), maxPrice)
+                );
+            }
+            
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
+
+        return productoRepository.findAll(spec);
     }
 
     public List<Producto> findAll() {
