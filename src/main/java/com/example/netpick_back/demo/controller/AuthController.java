@@ -1,25 +1,26 @@
 package com.example.netpick_back.demo.controller;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.netpick_back.demo.model.Comuna;
+import com.example.netpick_back.demo.model.Direcciones;
 import com.example.netpick_back.demo.model.Rol;
 import com.example.netpick_back.demo.model.Usuario;
-import com.example.netpick_back.demo.model.Direcciones;
-import com.example.netpick_back.demo.model.Comuna;
-import com.example.netpick_back.demo.repository.RolRepository;
-import com.example.netpick_back.demo.repository.DireccionesRepository;
 import com.example.netpick_back.demo.repository.ComunaRepository;
+import com.example.netpick_back.demo.repository.DireccionesRepository;
+import com.example.netpick_back.demo.repository.RolRepository;
 import com.example.netpick_back.demo.service.UsuarioService;
 
 @RestController
@@ -117,25 +118,15 @@ public class AuthController {
         }
     }
 
-    @PatchMapping("/updateProfile")
-    public ResponseEntity<?> updateProfile(@RequestBody Map<String, String> request) {
-        Integer userId; 
-        try {
-            String userIdStr = request.get("userId");
-            if (userIdStr == null) {
-                 userIdStr = request.get("id");
-            }
-            
-            if (userIdStr == null) {
-                return ResponseEntity.badRequest().body("ID de usuario es obligatorio");
-            }
-
-            userId = Integer.parseInt(userIdStr);
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().body("ID de usuario inválido");
-        }
+   @PutMapping("/profile")
+    public ResponseEntity<?> updateProfile(@RequestBody Map<String, String> request, Authentication authentication) {
         
-        Usuario usuario = usuarioService.findById(userId);
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(401).body("No autorizado: Debe iniciar sesión para editar el perfil");
+        }
+
+        String correoUsuario = authentication.getName();
+        Usuario usuario = usuarioService.findByCorreo(correoUsuario).orElse(null);
 
         if (usuario == null) {
             return ResponseEntity.status(404).body("Usuario no encontrado");
@@ -187,25 +178,20 @@ public class AuthController {
                 }
             }
         }
-        
-        if (updated) {
-            String finalDireccionStr = "";
-            List<Direcciones> dirs = direccionesRepository.findByUsuario(usuario);
-            if (!dirs.isEmpty()) {
-                finalDireccionStr = dirs.get(0).getDireccion();
-            }
-
-            return ResponseEntity.ok(Map.of(
-                "message", "Perfil actualizado con éxito",
-                "userId", usuario.getIdUsuario(),
-                "nombre", usuario.getNombre(),
-                "correo", usuario.getCorreo(),
-                "telefono", usuario.getTelefono() != null ? usuario.getTelefono() : "",
-                "direccion", finalDireccionStr,
-                "rol", usuario.getRol().getNombre()
-            ));
-        } else {
-            return ResponseEntity.ok("No se detectaron cambios para actualizar");
+        String finalDireccionStr = "";
+        List<Direcciones> dirs = direccionesRepository.findByUsuario(usuario);
+        if (!dirs.isEmpty()) {
+            finalDireccionStr = dirs.get(0).getDireccion();
         }
+
+        return ResponseEntity.ok(Map.of(
+            "message", "Perfil actualizado con éxito",
+            "userId", usuario.getIdUsuario(),
+            "nombre", usuario.getNombre(),
+            "correo", usuario.getCorreo(),
+            "telefono", usuario.getTelefono() != null ? usuario.getTelefono() : "",
+            "direccion", finalDireccionStr,
+            "rol", usuario.getRol().getNombre()
+        ));
     }
 }
