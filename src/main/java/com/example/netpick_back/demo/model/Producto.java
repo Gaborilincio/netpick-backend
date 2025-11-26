@@ -3,7 +3,8 @@ package com.example.netpick_back.demo.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
+import jakarta.persistence.Entity; // <--- AGREGADO
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -39,7 +40,7 @@ public class Producto {
     @Column(name = "linkImagenProducto", nullable = false)
     private String linkImagen;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idCategoria", nullable = false)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
     private Categoria categoria;
