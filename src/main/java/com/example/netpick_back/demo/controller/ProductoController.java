@@ -33,10 +33,6 @@ public class ProductoController {
             @RequestParam(required = false) Integer maxPrice) {
         
         List<Producto> list = productoService.findFilteredProducts(categoriaId, minPrice, maxPrice);
-        
-        if (list.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
         return ResponseEntity.ok(list);
     }
 
