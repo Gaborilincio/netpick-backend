@@ -57,4 +57,9 @@ public class DireccionesService {
     public void deleteById(Integer id) {
         direccionesRepository.deleteById(id);
     }
+
+    public List<Direcciones> findByUsuario(Integer idUsuario) {
+        return direccionesRepository.findDireccionesByUsuario(idUsuario);
+    }
+
 }

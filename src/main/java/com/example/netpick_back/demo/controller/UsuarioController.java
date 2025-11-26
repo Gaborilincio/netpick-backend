@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.netpick_back.demo.model.Direcciones;
 import com.example.netpick_back.demo.model.Usuario;
+import com.example.netpick_back.demo.service.DireccionesService;
 import com.example.netpick_back.demo.service.UsuarioService;
 
 @RestController
@@ -23,6 +25,9 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
+
+    @Autowired
+    private DireccionesService direccionesService;
 
     @GetMapping
     public ResponseEntity<List<Usuario>> getAllUsuarios() {
@@ -71,5 +76,14 @@ public class UsuarioController {
     public ResponseEntity<Void> deleteUsuario(@PathVariable Integer id) {
         usuarioService.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}/direcciones")
+    public ResponseEntity<List<Direcciones>> getDireccionesByUser(@PathVariable Integer id) {
+        List<Direcciones> direcciones = direccionesService.findByUsuario(id);
+        if (direcciones.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(direcciones);
     }
 }
