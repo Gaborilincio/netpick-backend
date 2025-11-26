@@ -6,10 +6,12 @@ import java.util.List;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import com.example.netpick_back.demo.model.Producto;
+import com.example.netpick_back.demo.model.Categoria;
+import com.example.netpick_back.demo.model.Producto; // Importamos Categoria
 import com.example.netpick_back.demo.repository.ProductoRepository;
 
-import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Predicate; // Importamos Join para evitar error 500
 import jakarta.transaction.Transactional;
 
 @Service
@@ -29,17 +31,17 @@ public class ProductoService {
             List<Predicate> predicates = new ArrayList<>();
 
             if (categoriaId != null && categoriaId != 0) { 
+                Join<Producto, Categoria> categoriaJoin = root.join("categoria");
+                
                 predicates.add(criteriaBuilder.equal(
-                    root.get("categoria").get("idCategoria"), categoriaId)
+                    categoriaJoin.get("idCategoria"), categoriaId)
                 );
             }
-
             if (minPrice != null && minPrice >= 0) {
                 predicates.add(criteriaBuilder.greaterThanOrEqualTo(
                     root.get("precio"), minPrice)
                 );
             }
-
             if (maxPrice != null && maxPrice > 0) {
                 predicates.add(criteriaBuilder.lessThanOrEqualTo(
                     root.get("precio"), maxPrice)
@@ -67,24 +69,12 @@ public class ProductoService {
     public Producto partialUpdate(Producto producto) {
         Producto existing = productoRepository.findById(producto.getIdProducto()).orElse(null);
         if (existing != null) {
-            if (producto.getNombre() != null) {
-                existing.setNombre(producto.getNombre());
-            }
-            if (producto.getDescripcion() != null) {
-                existing.setDescripcion(producto.getDescripcion());
-            }
-            if (producto.getPrecio() != null) {
-                existing.setPrecio(producto.getPrecio());
-            }
-            if (producto.getStock() != null) {
-                existing.setStock(producto.getStock());
-            }
-            if (producto.getLinkImagen() != null) {
-                existing.setLinkImagen(producto.getLinkImagen());
-            }
-            if (producto.getCategoria() != null) {
-                existing.setCategoria(producto.getCategoria());
-            }
+            if (producto.getNombre() != null) existing.setNombre(producto.getNombre());
+            if (producto.getDescripcion() != null) existing.setDescripcion(producto.getDescripcion());
+            if (producto.getPrecio() != null) existing.setPrecio(producto.getPrecio());
+            if (producto.getStock() != null) existing.setStock(producto.getStock());
+            if (producto.getLinkImagen() != null) existing.setLinkImagen(producto.getLinkImagen());
+            if (producto.getCategoria() != null) existing.setCategoria(producto.getCategoria());
             return productoRepository.save(existing);
         }
         return null;

@@ -1,5 +1,6 @@
 package com.example.netpick_back.demo.controller;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +33,21 @@ public class ProductoController {
             @RequestParam(required = false) Integer minPrice,
             @RequestParam(required = false) Integer maxPrice) {
         
-        List<Producto> list = productoService.findFilteredProducts(categoriaId, minPrice, maxPrice);
-        return ResponseEntity.ok(list);
+        try {
+            List<Producto> list = productoService.findFilteredProducts(categoriaId, minPrice, maxPrice);
+
+            if (list == null) {
+                return ResponseEntity.ok(Collections.emptyList());
+            }
+
+            return ResponseEntity.ok(list);
+            
+        } catch (Exception e) {
+            System.err.println("ERROR EN GET /producto: " + e.getMessage());
+            e.printStackTrace();
+            
+            return ResponseEntity.ok(Collections.emptyList());
+        }
     }
 
     @GetMapping("/{id}")
