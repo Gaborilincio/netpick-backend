@@ -23,10 +23,6 @@ public class VentaService {
         return ventaRepository.findAll();
     }
 
-    public List<Venta> findByUsuarioId(Integer userId) {
-        return ventaRepository.findByUsuarioIdUsuario(userId);
-    }   
-
     public Venta findById(Integer id) {
         return ventaRepository.findById(id).orElse(null);
     }

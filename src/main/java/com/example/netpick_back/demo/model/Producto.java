@@ -1,10 +1,7 @@
 package com.example.netpick_back.demo.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity; // <--- AGREGADO
-import jakarta.persistence.FetchType;
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -20,6 +17,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table (name = "producto")
+
+
 public class Producto {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
@@ -40,9 +39,8 @@ public class Producto {
     @Column(name = "linkImagenProducto", nullable = false)
     private String linkImagen;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "idCategoria", nullable = false)
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
     private Categoria categoria;
 
     public Producto(String nombre, String descripcion, Integer precio, Integer stock, String linkImagen, Categoria categoria) {
