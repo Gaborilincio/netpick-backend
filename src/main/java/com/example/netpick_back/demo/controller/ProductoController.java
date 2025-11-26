@@ -48,13 +48,36 @@ public class ProductoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Producto> updateProducto(@PathVariable Integer id, @RequestBody Producto producto) {
-        producto.setIdProducto(id);
-        Producto updatedProducto = productoService.save(producto);
-        if (updatedProducto == null) {
+    public ResponseEntity<Producto> updateProducto(
+            @PathVariable Integer id,
+            @RequestBody Producto producto) {
+
+        Producto existing = productoService.findById(id);
+        if (existing == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(updatedProducto);
+
+        if (producto.getNombre() != null) {
+            existing.setNombre(producto.getNombre());
+        }
+        if (producto.getDescripcion() != null) {
+            existing.setDescripcion(producto.getDescripcion());
+        }
+        if (producto.getPrecio() != null) {
+            existing.setPrecio(producto.getPrecio());
+        }
+        if (producto.getStock() != null) {
+            existing.setStock(producto.getStock());
+        }
+        if (producto.getLinkImagen() != null) {
+            existing.setLinkImagen(producto.getLinkImagen());
+        }
+        if (producto.getCategoria() != null) {
+            existing.setCategoria(producto.getCategoria());
+        }
+
+        Producto updated = productoService.save(existing);
+        return ResponseEntity.ok(updated);
     }
 
     @PatchMapping("/{id}")
