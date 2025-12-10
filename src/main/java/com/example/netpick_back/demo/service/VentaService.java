@@ -1,10 +1,25 @@
 package com.example.netpick_back.demo.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.netpick_back.DTO.VentaRequestDTO;
+import com.example.netpick_back.demo.model.Estado;
+import com.example.netpick_back.demo.model.MetodoEnvio;
+import com.example.netpick_back.demo.model.MetodoPago;
+import com.example.netpick_back.demo.model.Producto;
+import com.example.netpick_back.demo.model.Usuario;
 import com.example.netpick_back.demo.model.Venta;
+import com.example.netpick_back.demo.model.VentaProductos;
+import com.example.netpick_back.demo.repository.EstadoRepository;
+import com.example.netpick_back.demo.repository.MetodoEnvioRepository;
+import com.example.netpick_back.demo.repository.MetodoPagoRepository;
+import com.example.netpick_back.demo.repository.ProductoRepository;
+import com.example.netpick_back.demo.repository.UsuarioRepository;
+import com.example.netpick_back.demo.repository.VentaProductosRepository;
 import com.example.netpick_back.demo.repository.VentaRepository;
 
 import jakarta.transaction.Transactional;
@@ -12,6 +27,13 @@ import jakarta.transaction.Transactional;
 @Service
 @Transactional
 public class VentaService {
+
+    @Autowired private VentaProductosRepository ventaProductosRepository;
+    @Autowired private ProductoRepository productoRepository;
+    @Autowired private UsuarioRepository usuarioRepository; 
+    @Autowired private MetodoPagoRepository metodoPagoRepository; 
+    @Autowired private MetodoEnvioRepository metodoEnvioRepository; 
+    @Autowired private EstadoRepository estadoRepository;
 
     private final VentaRepository ventaRepository;
 
@@ -53,5 +75,64 @@ public class VentaService {
 
     public void deleteById(Integer id) {
         ventaRepository.deleteById(id);
+    }
+
+    @Transactional
+    public Venta realizarCompra(VentaRequestDTO request) {
+
+        Usuario usuario = usuarioRepository.findById(request.getIdUsuario())
+                .orElseThrow(() -> new RuntimeException("Error: Usuario no encontrado."));
+        MetodoPago mp = metodoPagoRepository.findById(request.getIdMetodoPago())
+                .orElseThrow(() -> new RuntimeException("Error: Método de Pago no encontrado."));
+        MetodoEnvio me = metodoEnvioRepository.findById(request.getIdMetodoEnvio())
+                .orElseThrow(() -> new RuntimeException("Error: Método de Envío no encontrado."));
+        Estado estado = estadoRepository.findById(request.getIdEstado())
+                .orElseThrow(() -> new RuntimeException("Error: Estado de Venta no encontrado."));
+
+
+        Integer totalVenta = 0;
+        for (var item : request.getProductos()) {
+            Producto producto = productoRepository.findById(item.getIdProducto())
+                    .orElseThrow(() -> new RuntimeException("Error: Producto con ID " + item.getIdProducto() + " no encontrado."));
+
+            if (producto.getStock() < item.getCantidad()) {
+                throw new RuntimeException("Error: Stock insuficiente para el producto: " + producto.getNombre() + ". Disponible: " + producto.getStock());
+            }
+
+            Integer precioUnitario = producto.getPrecio();
+            Integer subtotalItem = precioUnitario * item.getCantidad();
+            totalVenta += subtotalItem;
+
+            producto.setStock(producto.getStock() - item.getCantidad());
+            productoRepository.save(producto); 
+        }
+        
+        Venta nuevaVenta = new Venta();
+        nuevaVenta.setUsuario(usuario);
+        nuevaVenta.setMetodoPago(mp);
+        nuevaVenta.setMetodoEnvio(me);
+        nuevaVenta.setEstado(estado);
+        nuevaVenta.setTotalVenta(totalVenta);
+        nuevaVenta.setFechaVenta(LocalDateTime.now()); 
+        
+        Venta ventaGuardada = ventaRepository.save(nuevaVenta);
+
+        for (var item : request.getProductos()) {
+            Producto producto = productoRepository.findById(item.getIdProducto()).get(); 
+            
+            VentaProductos detalle = new VentaProductos();
+            detalle.setVenta(ventaGuardada);
+            detalle.setProducto(producto);
+            detalle.setCantidad(item.getCantidad());
+            detalle.setPrecioUnitario(producto.getPrecio()); 
+
+            ventaProductosRepository.save(detalle);
+        }
+
+        return ventaGuardada; 
+    }
+    
+    public List<Venta> obtenerHistorial(Integer idUsuario) {
+        return ventaRepository.findByUsuario_IdUsuario(idUsuario);
     }
 }

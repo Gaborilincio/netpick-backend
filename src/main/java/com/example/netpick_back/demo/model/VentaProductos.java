@@ -1,5 +1,6 @@
 package com.example.netpick_back.demo.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,6 +30,12 @@ public class VentaProductos {
     @ManyToOne
     @JoinColumn(name = "idProducto", nullable = false)
     private Producto producto;
+
+    @Column(name = "cantidad", nullable = false)
+    private Integer cantidad;
+
+    @Column(name = "precio_unitario", nullable = false)
+    private Integer precioUnitario;
 
     public VentaProductos(Venta venta, Producto producto) {
         this.venta = venta;

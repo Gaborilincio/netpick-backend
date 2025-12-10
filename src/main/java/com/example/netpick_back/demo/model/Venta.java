@@ -1,5 +1,8 @@
 package com.example.netpick_back.demo.model;
 
+import java.time.LocalDateTime;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -37,6 +40,12 @@ public class Venta {
     @ManyToOne
     @JoinColumn(name = "idUsuario", nullable = false)
     private Usuario usuario;
+
+    @Column(name = "fecha_venta", nullable = false)
+    private LocalDateTime fechaVenta; 
+    
+    @Column(name = "total_venta", nullable = false)
+    private Integer totalVenta;
 
     public Venta(MetodoPago metodoPago, MetodoEnvio metodoEnvio, Estado estado, Usuario usuario) {
         this.metodoPago = metodoPago;

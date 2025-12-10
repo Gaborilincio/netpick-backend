@@ -11,4 +11,5 @@ import com.example.netpick_back.demo.model.Venta;
 @Repository
 public interface VentaRepository extends JpaRepository<Venta, Integer> {
     Optional<Venta> findByIdVenta (Integer idVenta);
+    List<Venta> findByUsuario_IdUsuario(Integer idUsuario);
 }
