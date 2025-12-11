@@ -85,11 +85,14 @@ public class AuthController {
                 return ResponseEntity.status(401).body("Credenciales inválidas");
             }
 
+            String tokenSimulado = "TOKEN_DE_PRUEBA_123456789";
+
             return ResponseEntity.ok(Map.of(
                 "message", "Login exitoso",
                 "userId", usuario.getIdUsuario(),
                 "nombre", usuario.getNombre(),
-                "rol", usuario.getRol().getNombre()
+                "rol", usuario.getRol().getNombre(),
+                "token", tokenSimulado
             ));
 
         } catch (Exception e) {
