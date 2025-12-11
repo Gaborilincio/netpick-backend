@@ -2,10 +2,13 @@ package com.example.netpick_back.demo.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.netpick_back.DTO.VentaDetalleDTO;
+import com.example.netpick_back.DTO.VentaHistorialDTO;
 import com.example.netpick_back.DTO.VentaRequestDTO;
 import com.example.netpick_back.demo.model.Estado;
 import com.example.netpick_back.demo.model.MetodoEnvio;
@@ -137,7 +140,30 @@ public class VentaService {
         return ventaGuardada;
     }
 
-    public List<Venta> obtenerHistorial(Integer idUsuario) {
-        return ventaRepository.findHistorialByUsuarioId(idUsuario);
-    }
+public List<VentaHistorialDTO> obtenerHistorial(Integer idUsuario) {
+    List<Venta> ventas = ventaRepository.findHistorialByUsuarioId(idUsuario); 
+    return ventas.stream()
+            .map(venta -> {
+                VentaHistorialDTO dto = new VentaHistorialDTO();
+                dto.setIdVenta(venta.getIdVenta());
+                dto.setFechaVenta(venta.getFechaVenta());
+                dto.setTotalVenta(venta.getTotalVenta());
+                dto.setEstadoNombre(venta.getEstado() != null ? venta.getEstado().getNombre() : "N/A");
+                if (venta.getDetallesVenta() != null) {
+                    List<VentaDetalleDTO> detalles = venta.getDetallesVenta().stream()
+                        .map(detalle -> {
+                            VentaDetalleDTO detalleDto = new VentaDetalleDTO();
+                            detalleDto.setNombreProducto(detalle.getProducto().getNombre()); 
+                            detalleDto.setPrecioUnitario(detalle.getPrecioUnitario()); 
+                            detalleDto.setCantidad(detalle.getCantidad());
+                            return detalleDto;
+                        })
+                        .collect(Collectors.toList());
+                    dto.setProductos(detalles);
+                }
+                
+                return dto;
+            })
+            .collect(Collectors.toList());
+}
 }

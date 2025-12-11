@@ -3,20 +3,32 @@ package com.example.netpick_back.demo.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus; 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*; 
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import java.util.stream.Collectors; 
+import java.util.List;
+import com.example.netpick_back.DTO.VentaHistorialDTO;
+import com.example.netpick_back.DTO.VentaRequestDTO;
 import com.example.netpick_back.demo.model.Venta;
 import com.example.netpick_back.demo.service.VentaService;
-import com.example.netpick_back.DTO.VentaRequestDTO;
 
 @RestController
-@RequestMapping("/api/v1/ventas") 
+@RequestMapping("/api/v1/ventas")
 public class VentaController {
 
     @Autowired
     private VentaService ventaService;
-    @PostMapping("/checkout") 
+
+    @PostMapping("/checkout")
     public ResponseEntity<?> crearVentaTransaccional(@RequestBody VentaRequestDTO request) {
         try {
             Venta ventaRealizada = ventaService.realizarCompra(request);
@@ -27,16 +39,17 @@ public class VentaController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno al procesar la compra.");
         }
     }
-    
-    @GetMapping("/historial/{idUsuario}")
-    public ResponseEntity<List<Venta>> getHistorialCompras(@PathVariable Integer idUsuario) {
-        List<Venta> historial = ventaService.obtenerHistorial(idUsuario);
-        if (historial.isEmpty()) {
-            return ResponseEntity.noContent().build(); 
-        }
-        return ResponseEntity.ok(historial); 
-    }
 
+    @GetMapping("/historial/{idUsuario}")
+    public ResponseEntity<List<VentaHistorialDTO>> getHistorialCompras(@PathVariable Integer idUsuario) {
+        List<VentaHistorialDTO> historial = ventaService.obtenerHistorial(idUsuario);
+
+        if (historial.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(historial);
+    }
 
     @GetMapping
     public ResponseEntity<List<Venta>> getAllVentas() {
@@ -59,7 +72,7 @@ public class VentaController {
     @PutMapping("/{id}")
     public ResponseEntity<Venta> updateVenta(@PathVariable Integer id, @RequestBody Venta venta) {
         venta.setIdVenta(id);
-        Venta updatedVenta = ventaService.save(venta); 
+        Venta updatedVenta = ventaService.save(venta);
         if (updatedVenta == null) {
             return ResponseEntity.notFound().build();
         }
