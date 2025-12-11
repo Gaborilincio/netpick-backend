@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import java.util.stream.Collectors; 
+import java.util.stream.Collectors;
 import java.util.List;
+
+import com.example.netpick_back.DTO.VentaDetalleDTO;
 import com.example.netpick_back.DTO.VentaHistorialDTO;
 import com.example.netpick_back.DTO.VentaRequestDTO;
 import com.example.netpick_back.demo.model.Venta;
@@ -61,12 +63,31 @@ public class VentaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Venta> getVentaById(@PathVariable Integer id) {
+    public ResponseEntity<VentaHistorialDTO> getVentaById(@PathVariable Integer id) {
         Venta venta = ventaService.findById(id);
+
         if (venta == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(venta);
+        VentaHistorialDTO dto = new VentaHistorialDTO();
+        dto.setIdVenta(venta.getIdVenta());
+        dto.setFechaVenta(venta.getFechaVenta());
+        dto.setTotalVenta(venta.getTotalVenta());
+        dto.setEstadoNombre(venta.getEstado() != null ? venta.getEstado().getNombre() : "N/A");
+        if (venta.getDetallesVenta() != null) {
+            List<VentaDetalleDTO> detalles = venta.getDetallesVenta().stream()
+                    .map(detalle -> {
+                        VentaDetalleDTO detalleDto = new VentaDetalleDTO();
+                        detalleDto.setNombreProducto(detalle.getProducto().getNombre());
+                        detalleDto.setPrecioUnitario(detalle.getPrecioUnitario());
+                        detalleDto.setCantidad(detalle.getCantidad());
+                        return detalleDto;
+                    })
+                    .collect(Collectors.toList());
+            dto.setProductos(detalles);
+        }
+
+        return ResponseEntity.ok(dto);
     }
 
     @PutMapping("/{id}")
