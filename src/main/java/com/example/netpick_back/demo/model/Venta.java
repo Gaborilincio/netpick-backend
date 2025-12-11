@@ -2,6 +2,8 @@ package com.example.netpick_back.demo.model;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -41,7 +43,8 @@ public class Venta {
     @JoinColumn(name = "idUsuario", nullable = false)
     private Usuario usuario;
 
-    @Column(name = "fecha_venta", nullable = false)
+    @CreationTimestamp 
+    @Column(name = "fecha_venta")
     private LocalDateTime fechaVenta; 
     
     @Column(name = "total_venta", nullable = false)
