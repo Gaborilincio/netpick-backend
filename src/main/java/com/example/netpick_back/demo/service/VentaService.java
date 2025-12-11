@@ -28,12 +28,18 @@ import jakarta.transaction.Transactional;
 @Transactional
 public class VentaService {
 
-    @Autowired private VentaProductosRepository ventaProductosRepository;
-    @Autowired private ProductoRepository productoRepository;
-    @Autowired private UsuarioRepository usuarioRepository; 
-    @Autowired private MetodoPagoRepository metodoPagoRepository; 
-    @Autowired private MetodoEnvioRepository metodoEnvioRepository; 
-    @Autowired private EstadoRepository estadoRepository;
+    @Autowired
+    private VentaProductosRepository ventaProductosRepository;
+    @Autowired
+    private ProductoRepository productoRepository;
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+    @Autowired
+    private MetodoPagoRepository metodoPagoRepository;
+    @Autowired
+    private MetodoEnvioRepository metodoEnvioRepository;
+    @Autowired
+    private EstadoRepository estadoRepository;
 
     private final VentaRepository ventaRepository;
 
@@ -89,7 +95,6 @@ public class VentaService {
         Estado estado = estadoRepository.findById(request.getIdEstado())
                 .orElseThrow(() -> new RuntimeException("Error: Estado de Venta no encontrado."));
 
-
         Integer totalVenta = 0;
         for (var item : request.getProductos()) {
             Producto producto = productoRepository.findById(item.getIdProducto())
@@ -104,35 +109,35 @@ public class VentaService {
             totalVenta += subtotalItem;
 
             producto.setStock(producto.getStock() - item.getCantidad());
-            productoRepository.save(producto); 
+            productoRepository.save(producto);
         }
-        
+
         Venta nuevaVenta = new Venta();
         nuevaVenta.setUsuario(usuario);
         nuevaVenta.setMetodoPago(mp);
         nuevaVenta.setMetodoEnvio(me);
         nuevaVenta.setEstado(estado);
         nuevaVenta.setTotalVenta(totalVenta);
-        nuevaVenta.setFechaVenta(LocalDateTime.now()); 
-        
+        nuevaVenta.setFechaVenta(LocalDateTime.now());
+
         Venta ventaGuardada = ventaRepository.save(nuevaVenta);
 
         for (var item : request.getProductos()) {
-            Producto producto = productoRepository.findById(item.getIdProducto()).get(); 
-            
+            Producto producto = productoRepository.findById(item.getIdProducto()).get();
+
             VentaProductos detalle = new VentaProductos();
             detalle.setVenta(ventaGuardada);
             detalle.setProducto(producto);
             detalle.setCantidad(item.getCantidad());
-            detalle.setPrecioUnitario(producto.getPrecio()); 
+            detalle.setPrecioUnitario(producto.getPrecio());
 
             ventaProductosRepository.save(detalle);
         }
 
-        return ventaGuardada; 
+        return ventaGuardada;
     }
-    
+
     public List<Venta> obtenerHistorial(Integer idUsuario) {
-        return ventaRepository.findByUsuario_IdUsuario(idUsuario);
+        return ventaRepository.findHistorialByUsuarioId(idUsuario);
     }
 }
